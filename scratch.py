@@ -1,24 +1,43 @@
 # import os
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw
-#
-# im = Image.open("frontCheckImage.tif")
-#
-# draw = ImageDraw.Draw(im)
-# font = ImageFont.truetype("micrenc.ttf", 31)
-#
-# message = "A000000000A"
-# # _, _, w, h = draw(textbbox((0, 0), message, font=font))
-# x = (39)
-# y = (286.87)
-# # y = (250)
-# draw.text(((x),(y)),message,(0,0,0),font=font)
-#
-# # for i, l in enumerate(message):
-# #     draw.text(((x + i * 5.5),(y)),l,(0,0,0),font=font)
-#
-# im.show()
+
+im = Image.open("img2.tiff")
+print(im.info)
 # exit()
+draw = ImageDraw.Draw(im)
+font = ImageFont.truetype("micrenc.ttf", 42)
+# print(font.getname())
+# exit(0)
+
+draw.rectangle([0,450,im.size[0],im.size[1]-20],fill="white")
+# im.show()
+# exit(0)
+
+message = "C006005C"
+# _, _, w, h = draw.textbbox((0,0),message,font=font)
+x = 327
+y = 460
+# y = (250)
+draw.text(((x),(y)),message,anchor='mm',font=font)
+
+x = 569
+y = 460
+message = "A111914742A"
+
+draw.text(((x),(y)),message,anchor='mm',font=font)
+
+x = 839
+y = 460
+message = "3123456101C"
+
+draw.text(((x),(y)),message,anchor='mm',font=font)
+# for i, l in enumerate(message):
+#     draw.text(((x + i * 5.5),(y)),l,(0,0,0),font=font)
+
+im.show()
+im.save("test_out.tiff", format="tiff")
+exit()
 
 __CODEC__ = "cp850"
 
@@ -30,7 +49,11 @@ def reader(n, codec=None):
 
 
 def pad_zero_left(values, length):
-    return str(total_25_value).rjust(length, "0")
+    return str(values).rjust(length, "0")
+
+
+def pad_space_right(data, length):
+    data.ljust(length, b" ")
 
 
 rec_01 = {
@@ -335,7 +358,7 @@ with open("101Bank Of America20130218.ICL", 'rb') as fp:
                 elif k == "Image Data *":
                     img_data = reader(img_size)
                     print(img_data[:4])
-                    open("img.tiff", "wb").write(img_data)
+                    open(f"img{img_count}.tiff", "wb").write(img_data)
                     l_data += f"\t\t{bytes.fromhex(f'{total_bytes + img_size:08x}')}\t\t{img_size}\t\t{total_bytes + img_size}"
                     img_count += 1
                     # exit(0)
@@ -388,7 +411,8 @@ with open("101Bank Of America20130218.ICL", 'rb') as fp:
                 print(line)
                 exit(0)
                 # print(f"\t{line}")
-        print(f"{l_data}")
+        # print(f"{l_data}")
+
     print(f"\nTotal Image Count: {img_count}\nTotal Record Count: {item_count}\nTotal 61 Count: {total_61_count}\nTotal 61 Amount: {total_61_value}\nTotal 25 Count: {total_25_count}\nTotal 25 Amount: {total_25_value}")
     length = rec_70["Bundle Total Amount"]
     print(f'{pad_zero_left(total_25_value, length)}\n{pad_zero_left(total_61_value, length)}')
