@@ -1,42 +1,51 @@
 # import os
 from io import BytesIO
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, features
 
-im = Image.open("img2.tiff")
-print(im.info)
+img_block = BytesIO()
+im = Image.new(mode="1", size=(1200, 700), color="white")
+# im = Image.open("img2.tiff")
+
+# print(im.info, im.size, im.mode)
+# print(features.check('libtiff'))
+# im.show()
+# im = Image.open("test.tif")
 # exit()
 draw = ImageDraw.Draw(im)
 font = ImageFont.truetype("micrenc.ttf", 42)
-# print(font.getname())
-# exit(0)
-
-draw.rectangle([0,450,im.size[0],im.size[1]-20],fill="white")
+# # print(font.getname())
+# # exit(0)
+#
+# # draw.rectangle([0,450,im.size[0],im.size[1]-20],fill="white")
+# draw.rectangle([0,1200,0,700],fill="white")
+# im.save("test.tif", compression="group4", dpi=(200, 200))
+# print(im.info, im.size, im.mode)
 # im.show()
 # exit(0)
 
 message = "C006005C"
 # _, _, w, h = draw.textbbox((0,0),message,font=font)
 x = 327
-y = 460
+y = 650
 # y = (250)
 draw.text(((x),(y)),message,anchor='mm',font=font)
 
 x = 569
-y = 460
+# y = 460
 message = "A111914742A"
 
 draw.text(((x),(y)),message,anchor='mm',font=font)
 
 x = 839
-y = 460
+# y = 460
 message = "3123456101C"
 
 draw.text(((x),(y)),message,anchor='mm',font=font)
 # for i, l in enumerate(message):
 #     draw.text(((x + i * 5.5),(y)),l,(0,0,0),font=font)
 
+im.save("test.tif", compression="group4", dpi=(200, 200))
 im.show()
-im.save("test_out.tiff", format="tiff")
 exit()
 
 __CODEC__ = "cp850"
